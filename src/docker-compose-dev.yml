@@ -17,46 +17,46 @@ services:
       - snippet-manager-db.env
     volumes:
       - snippet-manager:/var/lib/postgresql/data
-  snippet-authorizer-api:
-    container_name: snippet-authorizer-api
-    image: ghcr.io/snippet-searcher-austral/snippet-authorizer-dev:latest
+  authorizer-api:
+    container_name: authorizer-api
+    image: ghcr.io/snippet-searcher-austral/authorizer-dev:latest
     ports:
       - '8081:8080'
     env_file:
       - authorizer.env
-  snippet_authorizer_db:
-    container_name: snippet_authorizer_db
+  authorizer_db:
+    container_name: authorizer_db
     image: postgres:12
     ports:
       - '5433:5432'
     env_file:
       - authorizer-database.env
     volumes:
-      - snippet-authorizer:/var/lib/postgresql/data
-  snippet-parser-api:
-    container_name: snippet-parser-api
-    image: ghcr.io/snippet-searcher-austral/snippet-parser-dev:latest
+      - authorizer:/var/lib/postgresql/data
+  parser-api:
+    container_name: parser-api
+    image: ghcr.io/snippet-searcher-austral/parser-dev:latest
     ports:
       - '8083:8080'
     env_file:
       - parser.env
-  snippet-formatter-api:
-    container_name: snippet-parser-api
-    image: ghcr.io/snippet-searcher-austral/snippet-formatter-dev:latest
+  formatter-api:
+    container_name: formatter-api
+    image: ghcr.io/snippet-searcher-austral/formatter-dev:latest
     ports:
       - '8084:8080'
     env_file:
       - formatter.env
-  snippet-linter-api:
-    container_name: snippet-parser-api
-    image: ghcr.io/snippet-searcher-austral/snippet-linter-dev:latest
+  linter-api:
+    container_name: linter-api
+    image: ghcr.io/snippet-searcher-austral/linter-dev:latest
     ports:
       - '8085:8080'
     env_file:
       - linter.env
-  snippet-executor-api:
-    container_name: snippet-parser-api
-    image: ghcr.io/snippet-searcher-austral/snippet-executor-dev:latest
+  executor-api:
+    container_name: executor-api
+    image: ghcr.io/snippet-searcher-austral/executor-dev:latest
     ports:
       - '8086:8080'
     env_file:
@@ -64,4 +64,4 @@ services:
 
 volumes:
   snippet-manager:
-  snippet-authorizer:
+  authorizer:
