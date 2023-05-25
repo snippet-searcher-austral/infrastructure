@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  authorizer-api:
+    container_name: authorizer-api
+    image: ghcr.io/snippet-searcher-austral/authorizer-dev:latest
+    ports:
+      - '8081:8080'
+    env_file:
+      - authorizer.env
+  authorizer_db:
+    container_name: authorizer_db
+    image: postgres:12
+    ports:
+      - '5433:5432'
+    env_file:
+      - authorizer-db.env
+    volumes:
+      - authorizer:/var/lib/postgresql/data
+
+volumes:
+  authorizer:

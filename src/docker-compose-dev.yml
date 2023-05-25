@@ -30,7 +30,7 @@ services:
     ports:
       - '5433:5432'
     env_file:
-      - authorizer-database.env
+      - authorizer-db.env
     volumes:
       - authorizer:/var/lib/postgresql/data
   parser-api:
