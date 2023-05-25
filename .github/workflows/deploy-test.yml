@@ -20,10 +20,9 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{secrets.DEV_SSH_PRIVATE}}
           SSH_KNOWN_HOSTS: ${{secrets.DEV_SSH_KNOWN_HOSTS}}
-      - name: Print Current Directory
+      - name: Print Current Directory Files
         run: |
-          pwd
-          ls
+          ls -al
       - name: Connect via SSH and deploy
         run: |
           scp -i $SSH_KEY_PATH src/docker-compose-test.yml matito@${{secrets.DEV_SSH_HOST}}:~/docker-compose.yml
