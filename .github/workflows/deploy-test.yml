@@ -26,8 +26,8 @@ jobs:
           scp -i $SSH_KEY_PATH src/docker-compose-test.yml matito@${{secrets.DEV_SSH_HOST}}:~/docker-compose.yml
           scp -i $SSH_KEY_PATH src/authorizer.env matito@${{secrets.DEV_SSH_HOST}}:~/authorizer.env
           scp -i $SSH_KEY_PATH src/authorizer-db.env matito@${{secrets.DEV_SSH_HOST}}:~/authorizer-db.env
-          ssh -t -i $SSH_KEY_PATH matito@${{secrets.DEV_SSH_HOST}} "GHCR_TOKEN=${{secrets.GHCR_TOKEN}} sudo bash -s" <<EOF
-            bash deploy-script.sh
+          ssh -t -i $SSH_KEY_PATH matito@${{secrets.DEV_SSH_HOST}} "sudo bash -s" <<EOF
+            bash deploy-script.sh "${{ secrets.GHCR_TOKEN }}"
           EOF
         env:
           SSH_KEY_PATH: ${{ github.workspace }}/../private.key
