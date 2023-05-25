@@ -23,7 +23,7 @@ jobs:
 
       - name: Connect via SSH and deploy
         run: |
-          scp -i $SSH_KEY_PATH docker-compose-test.yml matito@${{secrets.DEV_SSH_HOST}}:~/docker-compose.yml
+          scp -i $SSH_KEY_PATH src/docker-compose-test.yml matito@${{secrets.DEV_SSH_HOST}}:~/docker-compose.yml
           ssh -i $SSH_KEY_PATH matito@${{secrets.DEV_SSH_HOST}} "sudo bash -s" <<EOF
             bash ~/deploy-script.sh "all"
           EOF
