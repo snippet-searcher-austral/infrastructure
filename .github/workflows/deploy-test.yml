@@ -1,9 +1,9 @@
 name: Deploy test to Dev Environment
 
 on:
-  release:
-    types:
-      - created
+  push:
+    branches:
+      - main
 
 jobs:
   deploy:
