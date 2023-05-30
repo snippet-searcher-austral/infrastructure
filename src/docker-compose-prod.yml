@@ -7,14 +7,14 @@ services:
     ports:
       - '8080:8080'
     env_file:
-      - snippet-manager.env
+      - env-files/snippet-manager.env
   snippet-manager_db:
     container_name: snippet-manager_db
     image: postgres:12
     ports:
       - '5432:5432'
     env_file:
-      - snippet-manager-db.env
+      - env-files/snippet-manager-db.env
     volumes:
       - snippet-manager:/var/lib/postgresql/data
   snippet-authorizer-api:
@@ -23,7 +23,7 @@ services:
     ports:
       - '8081:8080'
     env_file:
-      - authorizer.env
+      - env-files/authorizer.env
   snippet_authorizer_db:
     container_name: snippet_authorizer_db
     image: postgres:12
@@ -45,8 +45,6 @@ services:
     image: ghcr.io/snippet-searcher-austral/snippet-formatter-prod:latest
     ports:
       - '8084:8080'
-    env_file:
-      - formatter.env
   snippet-linter-api:
     container_name: snippet-parser-api
     image: ghcr.io/snippet-searcher-austral/snippet-linter-prod:latest
@@ -59,8 +57,6 @@ services:
     image: ghcr.io/snippet-searcher-austral/snippet-executor-prod:latest
     ports:
       - '8086:8080'
-    env_file:
-      - executor.env
 
 volumes:
   snippet-manager:

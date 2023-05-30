@@ -23,9 +23,8 @@ jobs:
           SSH_KNOWN_HOSTS: ${{secrets.DEV_SSH_KNOWN_HOSTS}}
       - name: Connect via SSH and deploy
         run: |
-          scp -i $SSH_KEY_PATH src/docker-compose-test.yml matito@${{secrets.DEV_SSH_HOST}}:~/docker-compose.yml
-          scp -i $SSH_KEY_PATH src/authorizer.env matito@${{secrets.DEV_SSH_HOST}}:~/authorizer.env
-          scp -i $SSH_KEY_PATH src/authorizer-db.env matito@${{secrets.DEV_SSH_HOST}}:~/authorizer-db.env
+          scp -i $SSH_KEY_PATH src/docker-compose-dev.yml matito@${{secrets.DEV_SSH_HOST}}:~/docker-compose.yml
+          scp -i $SSH_KEY_PATH -r src/env-files/ matito@${{secrets.DEV_SSH_HOST}}:~/env-files/
           ssh -i $SSH_KEY_PATH matito@${{secrets.DEV_SSH_HOST}} "sudo bash -s" <<EOF
             bash deploy-script.sh "${{ secrets.GHCR_TOKEN }}"
           EOF

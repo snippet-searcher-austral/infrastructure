@@ -7,14 +7,14 @@ services:
     ports:
       - '8080:8080'
     env_file:
-      - snippet-manager.env
+      - env-files/snippet-manager.env
   snippet-manager_db:
     container_name: snippet-manager_db
     image: postgres:12
     ports:
       - '5432:5432'
     env_file:
-      - snippet-manager-db.env
+      - env-files/snippet-manager-db.env
     volumes:
       - snippet-manager:/var/lib/postgresql/data
   authorizer-api:
@@ -23,14 +23,14 @@ services:
     ports:
       - '8081:8080'
     env_file:
-      - authorizer.env
+      - env-files/authorizer.env
   authorizer_db:
-    container_name: authorizer_db
+    container_name: authorizer-db
     image: postgres:12
     ports:
       - '5433:5432'
     env_file:
-      - authorizer-db.env
+      - env-files/authorizer-db.env
     volumes:
       - authorizer:/var/lib/postgresql/data
   parser-api:
@@ -38,30 +38,32 @@ services:
     image: ghcr.io/snippet-searcher-austral/parser-dev:latest
     ports:
       - '8083:8080'
-    env_file:
-      - parser.env
   formatter-api:
     container_name: formatter-api
     image: ghcr.io/snippet-searcher-austral/formatter-dev:latest
     ports:
       - '8084:8080'
-    env_file:
-      - formatter.env
   linter-api:
     container_name: linter-api
     image: ghcr.io/snippet-searcher-austral/linter-dev:latest
     ports:
       - '8085:8080'
     env_file:
-      - linter.env
+      - env-files/linter.env
+  linter-db:
+    container_name: linter-db
+    image: postgres:12
+    ports:
+      - '5434:5432'
+    env_file:
+      - env-files/linter-db.env
   executor-api:
     container_name: executor-api
     image: ghcr.io/snippet-searcher-austral/executor-dev:latest
     ports:
       - '8086:8080'
-    env_file:
-      - executor.env
 
 volumes:
   snippet-manager:
   authorizer:
+  linter:
