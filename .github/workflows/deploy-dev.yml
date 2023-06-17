@@ -30,3 +30,4 @@ jobs:
           EOF
         env:
           SSH_KEY_PATH: ${{ github.workspace }}/../private.key
+
