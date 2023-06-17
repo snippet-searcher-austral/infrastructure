@@ -4,8 +4,8 @@ services:
   snippet-manager-api:
     container_name: snippet-manager-api
     image: ghcr.io/snippet-searcher-austral/snippet-manager-dev:latest
-    ports:
-      - '8080:8080'
+#    ports:
+#      - '8080:8080'
     env_file:
       - env-files/snippet-manager.env
   snippet-manager_db:
@@ -20,15 +20,15 @@ services:
   authorizer-api:
     container_name: authorizer-api
     image: ghcr.io/snippet-searcher-austral/authorizer-dev:latest
-    ports:
-      - '8081:8080'
+#    ports:
+#      - '8081:8080'
     env_file:
       - env-files/authorizer.env
   authorizer_db:
     container_name: authorizer-db
     image: postgres:12
     ports:
-      - '5433:5432'
+      - '5435:5432'
     env_file:
       - env-files/authorizer-db.env
     volumes:
@@ -36,18 +36,18 @@ services:
   parser-api:
     container_name: parser-api
     image: ghcr.io/snippet-searcher-austral/parser-dev:latest
-    ports:
-      - '8083:8080'
+#    ports:
+#      - '8083:8080'
   formatter-api:
     container_name: formatter-api
     image: ghcr.io/snippet-searcher-austral/formatter-dev:latest
-    ports:
-      - '8084:8080'
+#    ports:
+#      - '8084:8080'
   linter-api:
     container_name: linter-api
     image: ghcr.io/snippet-searcher-austral/linter-dev:latest
-    ports:
-      - '8085:8080'
+#    ports:
+#      - '8085:8080'
     env_file:
       - env-files/linter.env
   linter-db:
@@ -60,8 +60,17 @@ services:
   executor-api:
     container_name: executor-api
     image: ghcr.io/snippet-searcher-austral/executor-dev:latest
+#    ports:
+#      - '8086:8080'
+  proxy:
+    container_name: proxy
+    image: nginx:latest
     ports:
-      - '8086:8080'
+      - '8080:80'
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d/:ro
+  certbot:
+    image: certbot/certbot
 
 volumes:
   snippet-manager:
