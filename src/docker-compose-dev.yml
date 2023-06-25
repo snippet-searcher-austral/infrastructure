@@ -12,7 +12,7 @@ services:
     container_name: snippet-manager_db
     image: postgres:12
     ports:
-      - '5432:5432'
+      - '5432'
     env_file:
       - env-files/snippet-manager-db.env
     volumes:
@@ -28,7 +28,7 @@ services:
     container_name: authorizer-db
     image: postgres:12
     ports:
-      - '5435:5432'
+      - '5432'
     env_file:
       - env-files/authorizer-db.env
     volumes:
@@ -54,7 +54,7 @@ services:
     container_name: linter-db
     image: postgres:12
     ports:
-      - '5434:5432'
+      - '5432'
     env_file:
       - env-files/linter-db.env
   executor-api:
