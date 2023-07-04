@@ -84,6 +84,11 @@ services:
     volumes:
       - ./conf.d:/etc/nginx/conf.d/:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
+  redis:
+    container_name: redis
+    image: redis:6-alpine
+    ports:
+      - '6379:6379'
 
 volumes:
   snippet-manager:
