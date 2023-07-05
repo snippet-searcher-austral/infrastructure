@@ -25,7 +25,6 @@ jobs:
         run: |
           scp -i $SSH_KEY_PATH -r src/docker-compose-dev.yml matito@${{secrets.DEV_SSH_HOST}}:~/docker-compose.yml
           scp -i $SSH_KEY_PATH -r src/env-files/ matito@${{secrets.DEV_SSH_HOST}}:~/env-files/
-          scp -i $SSH_KEY_PATH -r src/conf.d/ matito@${{secrets.DEV_SSH_HOST}}:~/conf.d/
           ssh -i $SSH_KEY_PATH matito@${{secrets.DEV_SSH_HOST}} "sudo bash -s" <<EOF
             bash deploy-script.sh "${{ secrets.GHCR_TOKEN }}"
           EOF
