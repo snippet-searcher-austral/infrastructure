@@ -4,12 +4,12 @@ services:
   snippet-manager-api:
     container_name: snippet-manager-api
     image: ghcr.io/snippet-searcher-austral/snippet-manager-dev:latest
-#    ports:
-#      - '8080:8080'
     labels:
       com.datadoghq.ad.logs: '[{"source": "java", "service": "snippet-manager-api", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
     env_file:
       - env-files/snippet-manager.env
+      - env-files/datadog-sub.env
+
   snippet-manager_db:
     container_name: snippet-manager_db
     image: postgres:12
@@ -19,13 +19,16 @@ services:
       - env-files/snippet-manager-db.env
     volumes:
       - snippet-manager:/var/lib/postgresql/data
+
   authorizer-api:
     container_name: authorizer-api
     image: ghcr.io/snippet-searcher-austral/authorizer-dev:latest
-#    ports:
-#      - '8081:8080'
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "java", "service": "snippet-manager-api", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
     env_file:
       - env-files/authorizer.env
+      - env-files/datadog-sub.env
+
   authorizer_db:
     container_name: authorizer-db
     image: postgres:12
@@ -35,18 +38,24 @@ services:
       - env-files/authorizer-db.env
     volumes:
       - authorizer:/var/lib/postgresql/data
+
   formatter-api:
     container_name: formatter-api
     image: ghcr.io/snippet-searcher-austral/formatter-dev:latest
-#    ports:
-#      - '8084:8080'
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "java", "service": "snippet-manager-api", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
+    env_file:
+      - env-files/datadog-sub.env
+
   linter-api:
     container_name: linter-api
     image: ghcr.io/snippet-searcher-austral/linter-dev:latest
-#    ports:
-#      - '8085:8080'
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "java", "service": "snippet-manager-api", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
     env_file:
       - env-files/linter.env
+      - env-files/datadog-sub.env
+
   linter-db:
     container_name: linter-db
     image: postgres:12
@@ -54,17 +63,26 @@ services:
       - '5432'
     env_file:
       - env-files/linter-db.env
+
   executor-api:
     container_name: executor-api
     image: ghcr.io/snippet-searcher-austral/executor-dev:latest
-#    ports:
-#      - '8086:8080'
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "java", "service": "snippet-manager-api", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
+    env_file:
+      - env-files/datadog-sub.env
+
   datadog:
     image: datadog/agent
-    container_name: "datadog-dev-env"
+    container_name: "datadog-dev"
     hostname: 'datadog-dev'
     env_file:
       - env-files/datadog.env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
+
   proxy:
     container_name: proxy
     image: nginx:latest
@@ -74,6 +92,11 @@ services:
     volumes:
       - ./conf.d:/etc/nginx/conf.d/:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "java", "service": "snippet-manager-api", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
+    env_file:
+      - env-files/datadog-sub.env
+
   redis:
     container_name: redis
     image: redis:6-alpine
