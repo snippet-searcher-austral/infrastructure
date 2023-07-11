@@ -3,7 +3,7 @@ name: Deploy test to Dev Environment
 on:
   push:
     branches:
-      - main
+      - production
 
 jobs:
   deploy:
