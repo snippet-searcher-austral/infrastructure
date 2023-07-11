@@ -35,11 +35,6 @@ services:
       - env-files/authorizer-db.env
     volumes:
       - authorizer:/var/lib/postgresql/data
-  parser-api:
-    container_name: parser-api
-    image: ghcr.io/snippet-searcher-austral/parser-dev:latest
-#    ports:
-#      - '8083:8080'
   formatter-api:
     container_name: formatter-api
     image: ghcr.io/snippet-searcher-austral/formatter-dev:latest
@@ -68,13 +63,8 @@ services:
     image: datadog/agent
     container_name: "datadog-dev-env"
     hostname: 'datadog-dev'
-    environment:
-      - DD_API_KEY=656265fadc999c8a5501d14705af6619
-      - DD_SITE=us5.datadoghq.com
-      - DD_LOGS_ENABLED=true
-      - DD_APM_ENABLED=true
-      - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
-      - DD_HOSTNAME=datadog-dev
+    env_file:
+      - env-files/datadog.env
   proxy:
     container_name: proxy
     image: nginx:latest

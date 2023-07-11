@@ -4,60 +4,83 @@ services:
   snippet-manager-api:
     container_name: snippet-manager-api
     image: ghcr.io/snippet-searcher-austral/snippet-manager-prod:latest
-    ports:
-      - '8080:8080'
+    #    ports:
+    #      - '8080:8080'
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "java", "service": "snippet-manager-api", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
     env_file:
       - env-files/snippet-manager.env
   snippet-manager_db:
     container_name: snippet-manager_db
     image: postgres:12
     ports:
-      - '5432:5432'
+      - '5432'
     env_file:
       - env-files/snippet-manager-db.env
     volumes:
       - snippet-manager:/var/lib/postgresql/data
-  snippet-authorizer-api:
-    container_name: snippet-authorizer-api
+  authorizer-api:
+    container_name: authorizer-api
     image: ghcr.io/snippet-searcher-austral/authorizer-prod:latest
-    ports:
-      - '8081:8080'
+    #    ports:
+    #      - '8081:8080'
     env_file:
       - env-files/authorizer.env
-  snippet_authorizer_db:
-    container_name: snippet_authorizer_db
+  authorizer_db:
+    container_name: authorizer-db
     image: postgres:12
     ports:
-      - '5433:5432'
+      - '5432'
     env_file:
-      - authorizer-database.env
+      - env-files/authorizer-db.env
     volumes:
-      - snippet-authorizer:/var/lib/postgresql/data
-  snippet-parser-api:
-    container_name: snippet-parser-api
-    image: ghcr.io/snippet-searcher-austral/snippet-parser-prod:latest
-    ports:
-      - '8083:8080'
+      - authorizer:/var/lib/postgresql/data
+  formatter-api:
+    container_name: formatter-api
+    image: ghcr.io/snippet-searcher-austral/formatter-prod:latest
+  #    ports:
+  #      - '8084:8080'
+  linter-api:
+    container_name: linter-api
+    image: ghcr.io/snippet-searcher-austral/linter-prod:latest
+    #    ports:
+    #      - '8085:8080'
     env_file:
-      - parser.env
-  snippet-formatter-api:
-    container_name: snippet-parser-api
-    image: ghcr.io/snippet-searcher-austral/snippet-formatter-prod:latest
+      - env-files/linter.env
+  linter-db:
+    container_name: linter-db
+    image: postgres:12
     ports:
-      - '8084:8080'
-  snippet-linter-api:
-    container_name: snippet-parser-api
-    image: ghcr.io/snippet-searcher-austral/snippet-linter-prod:latest
-    ports:
-      - '8085:8080'
+      - '5432'
     env_file:
-      - linter.env
-  snippet-executor-api:
-    container_name: snippet-parser-api
-    image: ghcr.io/snippet-searcher-austral/snippet-executor-prod:latest
+      - env-files/linter-db.env
+  executor-api:
+    container_name: executor-api
+    image: ghcr.io/snippet-searcher-austral/executor-prod:latest
+  #    ports:
+  #      - '8086:8080'
+  datadog:
+    image: datadog/agent
+    container_name: "datadog-prod-env"
+    hostname: 'datadog-prod'
+    env_file:
+      - env-files/datadog.env
+  proxy:
+    container_name: proxy
+    image: nginx:latest
     ports:
-      - '8086:8080'
+      - '8080:80'
+      - '443:443'
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d/:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+  redis:
+    container_name: redis
+    image: redis:6-alpine
+    ports:
+      - '6379:6379'
 
 volumes:
   snippet-manager:
-  snippet-authorizer:
+  authorizer:
+  linter:

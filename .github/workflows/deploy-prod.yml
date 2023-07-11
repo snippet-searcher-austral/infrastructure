@@ -1,0 +1,33 @@
+name: Deploy test to Dev Environment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create SSH key
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ../private.key
+          sudo chmod 400 ../private.key
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{secrets.PROD_SSH_PRIVATE}}
+          SSH_KNOWN_HOSTS: ${{secrets.PROD_SSH_KNOWN_HOSTS}}
+      - name: Connect via SSH and deploy
+        run: |
+          scp -i $SSH_KEY_PATH -r src/docker-compose-dev.yml matito@${{secrets.PROD_SSH_HOST}}:~/docker-compose.yml
+          scp -i $SSH_KEY_PATH -r src/env-files/ matito@${{secrets.PROD_SSH_HOST}}:~/env-files/
+          ssh -i $SSH_KEY_PATH matito@${{secrets.PROD_SSH_HOST}} "sudo bash -s" <<EOF
+            bash deploy-script.sh "${{ secrets.GHCR_TOKEN }}"
+          EOF
+        env:
+          SSH_KEY_PATH: ${{ github.workspace }}/../private.key
+
