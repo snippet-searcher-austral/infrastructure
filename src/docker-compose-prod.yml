@@ -4,12 +4,12 @@ services:
   snippet-manager-api:
     container_name: snippet-manager-api
     image: ghcr.io/snippet-searcher-austral/snippet-manager-prod:latest
-    #    ports:
-    #      - '8080:8080'
     labels:
       com.datadoghq.ad.logs: '[{"source": "java", "service": "snippet-manager-api", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
     env_file:
       - env-files/snippet-manager.env
+      - env-files/datadog-sub-prod.env
+
   snippet-manager_db:
     container_name: snippet-manager_db
     image: postgres:12
@@ -19,13 +19,16 @@ services:
       - env-files/snippet-manager-db.env
     volumes:
       - snippet-manager:/var/lib/postgresql/data
+
   authorizer-api:
     container_name: authorizer-api
     image: ghcr.io/snippet-searcher-austral/authorizer-prod:latest
-    #    ports:
-    #      - '8081:8080'
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "java", "service": "authorizer-api", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
     env_file:
       - env-files/authorizer.env
+      - env-files/datadog-sub-prod.env
+
   authorizer_db:
     container_name: authorizer-db
     image: postgres:12
@@ -35,18 +38,35 @@ services:
       - env-files/authorizer-db.env
     volumes:
       - authorizer:/var/lib/postgresql/data
+
   formatter-api:
     container_name: formatter-api
     image: ghcr.io/snippet-searcher-austral/formatter-prod:latest
-  #    ports:
-  #      - '8084:8080'
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "java", "service": "formatter-api", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
+    env_file:
+      - env-files/formatter.env
+      - env-files/datadog-sub-prod.env
+
+  formatter-db:
+    container_name: formatter-db
+    image: postgres:12
+    ports:
+      - '5432'
+    env_file:
+      - env-files/formatter-db.env
+    volumes:
+      - formatter:/var/lib/postgresql/data
+
   linter-api:
     container_name: linter-api
     image: ghcr.io/snippet-searcher-austral/linter-prod:latest
-    #    ports:
-    #      - '8085:8080'
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "java", "service": "linter-api", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
     env_file:
       - env-files/linter.env
+      - env-files/datadog-sub-prod.env
+
   linter-db:
     container_name: linter-db
     image: postgres:12
@@ -54,17 +74,26 @@ services:
       - '5432'
     env_file:
       - env-files/linter-db.env
+
   executor-api:
     container_name: executor-api
     image: ghcr.io/snippet-searcher-austral/executor-prod:latest
-  #    ports:
-  #      - '8086:8080'
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "java", "service": "executor-api", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
+    env_file:
+      - env-files/datadog-sub-prod.env
+
   datadog:
     image: datadog/agent
-    container_name: "datadog-prod-env"
+    container_name: "datadog-prod"
     hostname: 'datadog-prod'
     env_file:
-      - env-files/datadog.env
+      - env-files/datadog-prod.env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
+
   proxy:
     container_name: proxy
     image: nginx:latest
@@ -74,6 +103,11 @@ services:
     volumes:
       - ./conf.d:/etc/nginx/conf.d/:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "java", "service": "proxy", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
+    env_file:
+      - env-files/datadog-sub-prod.env
+
   redis:
     container_name: redis
     image: redis:6-alpine
@@ -84,3 +118,4 @@ volumes:
   snippet-manager:
   authorizer:
   linter:
+  formatter:

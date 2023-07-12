@@ -1,1 +1,5 @@
 .idea
+src/env-files/datadog.env
+src/env-files/datadog-prod.env
+src/env-files/datadog-sub.env
+src/env-files/datadog-sub-prod.env
