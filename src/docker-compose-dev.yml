@@ -114,6 +114,11 @@ services:
     image: redis:6-alpine
     ports:
       - '6379:6379'
+  app:
+    container_name: app
+    image: ghcr.io/snippet-searcher-austral/app-dev:latest
+    env_file:
+      - env-files/app.env
 
 volumes:
   snippet-manager:
