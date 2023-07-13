@@ -9,8 +9,8 @@ services:
     labels:
       com.datadoghq.ad.logs: '[{"source": "java", "service": "snippet-manager-api", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
     env_file:
-      - env-files/snippet-manager.env
-      - env-files/datadog-sub.env
+      - dev-env-files/snippet-manager.env
+      - dev-env-files/datadog-sub.env
 
   snippet-manager_db:
     container_name: snippet-manager_db
@@ -18,8 +18,8 @@ services:
     ports:
       - '5432'
     env_file:
-      - env-files/snippet-manager-db.env
-      - env-files/datadog-sub.env
+      - dev-env-files/snippet-manager-db.env
+      - dev-env-files/datadog-sub.env
 
     labels:
       com.datadoghq.ad.logs: '[{"source": "java", "service": "snippet-manager-db", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
@@ -32,8 +32,8 @@ services:
     #    ports:
     #      - '8081:8080'
     env_file:
-      - env-files/authorizer.env
-      - env-files/datadog-sub.env
+      - dev-env-files/authorizer.env
+      - dev-env-files/datadog-sub.env
     labels:
       com.datadoghq.ad.logs: '[{"source": "java", "service": "authorizer-api", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
 
@@ -43,8 +43,8 @@ services:
     ports:
       - '5432'
     env_file:
-      - env-files/authorizer-db.env
-      - env-files/datadog-sub.env
+      - dev-env-files/authorizer-db.env
+      - dev-env-files/datadog-sub.env
     labels:
       com.datadoghq.ad.logs: '[{"source": "java", "service": "authorizer-db", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
 
@@ -54,7 +54,7 @@ services:
     container_name: parser-api
     image: ghcr.io/snippet-searcher-austral/parser-dev:latest
     env_file:
-      - env-files/datadog-sub.env
+      - dev-env-files/datadog-sub.env
   #    ports:
   #      - '8083:8080'
     labels:
@@ -64,7 +64,7 @@ services:
     container_name: formatter-api
     image: ghcr.io/snippet-searcher-austral/formatter-dev:latest
     env_file:
-      - env-files/datadog-sub.env
+      - dev-env-files/datadog-sub.env
   #    ports:
   #      - '8084:8080'
     labels:
@@ -76,8 +76,8 @@ services:
     #    ports:
     #      - '8085:8080'
     env_file:
-      - env-files/linter.env
-      - env-files/datadog-sub.env
+      - dev-env-files/linter.env
+      - dev-env-files/datadog-sub.env
     labels:
       com.datadoghq.ad.logs: '[{"source": "java", "service": "linter-api", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
 
@@ -87,8 +87,8 @@ services:
     ports:
       - '5432'
     env_file:
-      - env-files/linter-db.env
-      - env-files/datadog-sub.env
+      - dev-env-files/linter-db.env
+      - dev-env-files/datadog-sub.env
     labels:
       com.datadoghq.ad.logs: '[{"source": "java", "service": "linter-db", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
 
@@ -96,7 +96,7 @@ services:
     container_name: executor-api
     image: ghcr.io/snippet-searcher-austral/executor-dev:latest
     env_file:
-      - env-files/datadog-sub.env
+      - dev-env-files/datadog-sub.env
   #    ports:
   #      - '8086:8080'
     labels:
@@ -107,7 +107,7 @@ services:
     container_name: "datadog-dev"
     hostname: 'datadog-dev'
     env_file:
-        - env-files/datadog.env
+        - dev-env-files/datadog.env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /proc/:/host/proc/:ro
@@ -120,7 +120,7 @@ services:
     volumes:
       - ./conf-test.d:/etc/nginx/conf.d/:ro
     env_file:
-      - env-files/datadog-sub.env
+      - dev-env-files/datadog-sub.env
     labels:
      com.datadoghq.ad.logs: '[{"source": "java", "service": "proxy", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
 

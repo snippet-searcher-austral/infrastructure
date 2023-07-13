@@ -1,5 +1,5 @@
 .idea
-src/env-files/datadog.env
-src/env-files/datadog-prod.env
-src/env-files/datadog-sub.env
-src/env-files/datadog-sub-prod.env
+src/dev-env-files/datadog.env
+src/dev-env-files/datadog-sub.env
+src/prod-env-files/datadog.env
+src/prod-env-files/datadog-sub.env

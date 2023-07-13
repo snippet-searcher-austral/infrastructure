@@ -24,7 +24,7 @@ jobs:
       - name: Connect via SSH and deploy
         run: |
           scp -i $SSH_KEY_PATH -r src/docker-compose-prod.yml mati@${{secrets.PROD_SSH_HOST}}:~/docker-compose.yml
-          scp -i $SSH_KEY_PATH -r src/env-files/ mati@${{secrets.PROD_SSH_HOST}}:~/env-files/
+          scp -i $SSH_KEY_PATH -r src/prod-env-files/ mati@${{secrets.PROD_SSH_HOST}}:~/env-files/
           ssh -i $SSH_KEY_PATH mati@${{secrets.PROD_SSH_HOST}} "sudo bash -s" <<EOF
             bash deploy-script.sh "${{ secrets.GHCR_TOKEN }}"
           EOF
