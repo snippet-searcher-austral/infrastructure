@@ -1,4 +1,4 @@
-name: Deploy test to Dev Environment
+name: Deploy Dev containers to Dev Environment
 
 on:
   push:
